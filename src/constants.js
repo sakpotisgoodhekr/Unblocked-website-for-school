@@ -13,7 +13,7 @@ export const THEME_CONFIGS = {
   protis: {
     name: 'Default (protis)',
     title: 'protis - Unblocked Games',
-    favicon: '/favicon.ico',
+    favicon: '/favicon.svg',
     darkBg: '#060913',
     lightBg: '#f8fafc',
     accent: '#06b6d4',
@@ -27,7 +27,7 @@ export const THEME_CONFIGS = {
   classroom: {
     name: 'Google Classroom',
     title: 'Classes - Google Classroom',
-    favicon: 'https://ssl.gstatic.com/classroom/favicon.png',
+    favicon: '/icons/classroom.svg',
     darkBg: '#071a0e',
     lightBg: '#f6faf7',
     accent: '#137333',
@@ -41,7 +41,7 @@ export const THEME_CONFIGS = {
   drive: {
     name: 'Google Drive',
     title: 'My Drive - Google Drive',
-    favicon: 'https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png',
+    favicon: '/icons/drive.svg',
     darkBg: '#091322',
     lightBg: '#f4f7fc',
     accent: '#1a73e8',
@@ -55,7 +55,7 @@ export const THEME_CONFIGS = {
   canvas: {
     name: 'Canvas LMS',
     title: 'Dashboard - Canvas LMS',
-    favicon: 'https://du11hjcvx0uqb.cloudfront.net/dist/images/favicon-e10d657a73.ico',
+    favicon: '/icons/canvas.svg',
     darkBg: '#180b0d',
     lightBg: '#fdf6f6',
     accent: '#e02424',
@@ -69,7 +69,7 @@ export const THEME_CONFIGS = {
   desmos: {
     name: 'Desmos | Graphing Calculator',
     title: 'Desmos | Graphing Calculator',
-    favicon: 'https://www.desmos.com/favicon.ico',
+    favicon: '/icons/desmos.svg',
     darkBg: '#061320',
     lightBg: '#f2f7fb',
     accent: '#2572b4',
