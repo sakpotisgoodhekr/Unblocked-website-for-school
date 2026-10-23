@@ -1,0 +1,6 @@
+{
+  "name": "protis",
+  "description": "Minimalist unblocked games portal with a glassy aesthetic, shooting stars background, icon-only navigation, and high-performance iframe loading.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
