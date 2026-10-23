@@ -20,6 +20,12 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGame, setSelectedGame] = useState(null);
 
+  // Initial Fullsite Loading Screen (Fixes blank page on GitHub Pages)
+  const [appLoading, setAppLoading] = useState(true);
+  const [loadPercent, setLoadPercent] = useState(20);
+  const [loadStatus, setLoadStatus] = useState('Initializing unblocked portal...');
+  const [isFadingOut, setIsFadingOut] = useState(false);
+
   // Load persistent favorites
   const [favorites, setFavorites] = useState(() => {
     try {
@@ -40,23 +46,66 @@ export default function App() {
     }
   });
 
-  // Dynamic fetch of games from iframe JSON database
+  // Automated loading sequence
+  useEffect(() => {
+    const t1 = setTimeout(() => {
+      setLoadPercent(45);
+      setLoadStatus('Optimizing Chromebook 60 FPS Engine...');
+    }, 150);
+
+    const t2 = setTimeout(() => {
+      setLoadPercent(80);
+      setLoadStatus('Configuring Stealth Themes & Starfield...');
+    }, 350);
+
+    const t3 = setTimeout(() => {
+      setLoadPercent(100);
+      setLoadStatus('Ready!');
+    }, 600);
+
+    const t4 = setTimeout(() => {
+      setIsFadingOut(true);
+    }, 750);
+
+    const t5 = setTimeout(() => {
+      setAppLoading(false);
+    }, 1050);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+      clearTimeout(t4);
+      clearTimeout(t5);
+    };
+  }, []);
+
+  // Dynamic fetch of games from iframe JSON database (with GitHub Pages relative path resolution)
   useEffect(() => {
     let mounted = true;
     setLoading(true);
-    fetch('/games.json')
+
+    const base = import.meta.env.BASE_URL || './';
+    const primaryUrl = `${base.endsWith('/') ? base : base + '/'}games.json`;
+
+    fetch(primaryUrl)
       .then((res) => {
-        if (!res.ok) throw new Error('Failed to load games');
+        if (!res.ok) throw new Error('Path fallback');
         return res.json();
       })
+      .catch(() => {
+        return fetch('./games.json')
+          .then((res) => res.json())
+          .catch(() => fetch('/games.json').then((res) => res.json()));
+      })
       .then((data) => {
-        if (mounted) {
+        if (mounted && Array.isArray(data)) {
           setGames(data);
           setLoading(false);
         }
       })
       .catch((err) => {
-        console.error('Error fetching games.json:', err);
+        console.warn('Empty or pending games database:', err);
         if (mounted) setLoading(false);
       });
 
@@ -83,7 +132,7 @@ export default function App() {
     }
   }, [settings]);
 
-  // Get current active theme config (Classroom, Drive, Canvas LMS, Desmos, or Protis)
+  // Get current active theme config
   const themeConfig = useMemo(() => {
     return THEME_CONFIGS[settings.cloakPreset] || THEME_CONFIGS.protis;
   }, [settings.cloakPreset]);
@@ -99,7 +148,6 @@ export default function App() {
       root.classList.add('light');
     }
 
-    // Dynamic background color from theme
     const activeBgColor = settings.darkMode ? themeConfig.darkBg : themeConfig.lightBg;
     document.body.style.backgroundColor = activeBgColor;
   }, [settings.darkMode, themeConfig]);
@@ -111,8 +159,8 @@ export default function App() {
     let link = document.querySelector("link[rel*='icon']");
     if (!link) {
       link = document.createElement('link');
-      link.type = 'image/x-icon';
-      link.rel = 'shortcut icon';
+      link.type = 'image/svg+xml';
+      link.rel = 'icon';
       document.getElementsByTagName('head')[0].appendChild(link);
     }
     link.href = themeConfig.favicon;
@@ -162,6 +210,51 @@ export default function App() {
       }`}
       style={{ backgroundColor: activeBgColor }}
     >
+      {/* Interactive App Loading Screen at the start */}
+      {appLoading && (
+        <div
+          className={`fixed inset-0 z-50 flex flex-col items-center justify-center p-4 bg-[#060913] transition-opacity duration-300 ${
+            isFadingOut ? 'opacity-0 pointer-events-none' : 'opacity-100'
+          }`}
+        >
+          {/* Ambient Glow */}
+          <div className="absolute w-80 h-80 rounded-full blur-3xl pointer-events-none opacity-20 bg-cyan-500" />
+
+          <div className="relative z-10 w-full max-w-sm rounded-3xl p-8 glass-panel shadow-2xl text-center border border-white/10 flex flex-col items-center">
+            {/* Wordmark */}
+            <h1 className="font-sans text-5xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-slate-400 select-none mb-2">
+              protis
+            </h1>
+
+            <p className="text-xs text-slate-400 font-medium mb-6">
+              {loadStatus}
+            </p>
+
+            {/* Glowing Progress Track */}
+            <div className="w-full h-2.5 bg-slate-800/80 rounded-full overflow-hidden border border-white/10 mb-3 relative">
+              <div
+                className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full transition-all duration-300 ease-out shadow-sm shadow-cyan-500/50"
+                style={{ width: `${loadPercent}%` }}
+              />
+            </div>
+
+            <div className="flex items-center justify-between w-full text-[11px] text-slate-500 font-mono">
+              <span>UNBLOCKED HUB</span>
+              <span className="text-cyan-400 font-bold">{loadPercent}%</span>
+            </div>
+
+            {/* Quick Skip Button */}
+            <button
+              type="button"
+              onClick={() => setAppLoading(false)}
+              className="mt-6 text-[11px] text-slate-500 hover:text-white transition-colors cursor-pointer"
+            >
+              Skip
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Dynamic Shooting Stars Canvas Background with Theme Colors */}
       <ShootingStarsCanvas
         darkMode={settings.darkMode}
