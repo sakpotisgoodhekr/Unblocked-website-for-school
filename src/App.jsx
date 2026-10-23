@@ -10,7 +10,17 @@ import { GamesView } from './components/GamesView';
 import { GamePlayerModal } from './components/GamePlayerModal';
 import { SettingsModal } from './components/SettingsModal';
 import { ShootingStarsCanvas } from './components/ShootingStarsCanvas';
+import { TiltButton } from './components/TiltButton';
 import { THEME_CONFIGS, DEFAULT_SETTINGS } from './constants';
+
+const RANDOM_TIPS = [
+  "Mason H is that you?",
+  "Ik Zander is here",
+  "Money Spread",
+  "Scool sux",
+  "was that rushing or dragging",
+  "GEODASH REFERENCE",
+];
 
 export default function App() {
   const [games, setGames] = useState([]);
@@ -25,6 +35,11 @@ export default function App() {
   const [loadPercent, setLoadPercent] = useState(20);
   const [loadStatus, setLoadStatus] = useState('Initializing unblocked portal...');
   const [isFadingOut, setIsFadingOut] = useState(false);
+
+  // Randomized tip every time you refresh or open the website
+  const [randomTip] = useState(() => {
+    return RANDOM_TIPS[Math.floor(Math.random() * RANDOM_TIPS.length)];
+  });
 
   // Load persistent favorites
   const [favorites, setFavorites] = useState(() => {
@@ -230,27 +245,37 @@ export default function App() {
               {loadStatus}
             </p>
 
-            {/* Glowing Progress Track */}
-            <div className="w-full h-2.5 bg-slate-800/80 rounded-full overflow-hidden border border-white/10 mb-3 relative">
-              <div
-                className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full transition-all duration-300 ease-out shadow-sm shadow-cyan-500/50"
-                style={{ width: `${loadPercent}%` }}
-              />
+            {/* Loading Bar with Skip Button Next to It */}
+            <div className="flex items-center gap-3 w-full my-3">
+              <div className="flex-1 h-3 bg-slate-800/80 rounded-full overflow-hidden border border-white/10 relative">
+                <div
+                  className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full transition-all duration-300 ease-out shadow-sm shadow-cyan-500/50"
+                  style={{ width: `${loadPercent}%` }}
+                />
+              </div>
+
+              {/* Skip Button next to the loading bar */}
+              <TiltButton
+                onClick={() => setAppLoading(false)}
+                className="px-3 py-1 rounded-xl text-xs font-bold text-white bg-slate-800/90 hover:bg-slate-700 border border-white/10 shadow-sm shrink-0 cursor-pointer"
+                title="Skip loading screen"
+                scale={1.12}
+                maxTilt={20}
+              >
+                Skip ➔
+              </TiltButton>
             </div>
 
-            <div className="flex items-center justify-between w-full text-[11px] text-slate-500 font-mono">
+            <div className="flex items-center justify-between w-full text-[11px] text-slate-500 font-mono mb-4">
               <span>UNBLOCKED HUB</span>
               <span className="text-cyan-400 font-bold">{loadPercent}%</span>
             </div>
 
-            {/* Quick Skip Button */}
-            <button
-              type="button"
-              onClick={() => setAppLoading(false)}
-              className="mt-6 text-[11px] text-slate-500 hover:text-white transition-colors cursor-pointer"
-            >
-              Skip
-            </button>
+            {/* Loading Screen Tip Text (Randomized Every Refresh) */}
+            <div className="w-full p-2.5 rounded-2xl bg-white/5 border border-white/10 text-center">
+              <div className="text-[10px] uppercase font-bold tracking-wider text-slate-400 mb-0.5">Tip</div>
+              <div className="text-xs text-cyan-300 font-medium">"{randomTip}"</div>
+            </div>
           </div>
         </div>
       )}

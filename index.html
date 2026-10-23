@@ -95,10 +95,18 @@
       <div class="preloader" id="static-preloader">
         <div class="preloader-card">
           <h1 class="preloader-title">protis</h1>
-          <div class="preloader-sub">Initializing unblocked portal...</div>
+          <div class="preloader-sub" id="preloader-tip">Initializing unblocked portal...</div>
           <div class="preloader-bar-bg">
             <div class="preloader-bar"></div>
           </div>
+          <script>
+            try {
+              var tips = ["Mason H is that you?", "Ik Zander is here", "Money Spread", "Scool sux", "was that rushing or dragging", "GEODASH REFERENCE"];
+              var t = tips[Math.floor(Math.random() * tips.length)];
+              var el = document.getElementById('preloader-tip');
+              if (el) el.textContent = '"' + t + '"';
+            } catch(e) {}
+          </script>
         </div>
       </div>
     </div>

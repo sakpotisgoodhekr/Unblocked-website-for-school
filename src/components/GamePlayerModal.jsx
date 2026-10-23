@@ -227,9 +227,21 @@ export const GamePlayerModal = ({
           title={game.title}
           onLoad={handleIframeLoad}
           className="w-full h-full border-0 block"
-          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-          sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-popups"
+          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen; web-share; clipboard-read; clipboard-write"
+          sandbox="allow-scripts allow-popups allow-forms allow-same-origin allow-popups-to-escape-sandbox allow-downloads allow-storage-access-by-user-activation allow-pointer-lock allow-modals"
         />
+      </div>
+
+      {/* Unblocked Tip for third-party embeds */}
+      <div className="w-full max-w-6xl mx-auto mt-1 flex items-center justify-between text-[11px] text-slate-400 px-2">
+        <span>Tip: Use keyboard arrows / WASD to control.</span>
+        <button
+          type="button"
+          onClick={handlePopout}
+          className="text-cyan-400 hover:text-cyan-300 underline cursor-pointer"
+        >
+          Having trouble? Open directly in new window ↗
+        </button>
       </div>
     </div>
   );

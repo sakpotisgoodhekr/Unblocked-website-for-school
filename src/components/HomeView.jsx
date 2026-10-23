@@ -25,8 +25,8 @@ export const HomeView = ({
   setSearchQuery,
   themeAccent = '#06b6d4',
 }) => {
-  // Top 4 popular games, ensuring Volley Random is right at the top
-  const popularGames = games.slice(0, 4);
+  // Featured games on home view
+  const popularGames = games.slice(0, 8);
 
   const handleRandomPlay = () => {
     if (games.length === 0) return;

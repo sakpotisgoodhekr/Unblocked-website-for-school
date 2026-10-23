@@ -1,1 +1,67 @@
-[]
+[
+  {
+    "id": "run-3",
+    "title": "Run 3",
+    "category": "action",
+    "iframeUrl": "https://realpeanut.github.io/games/run3/index.html",
+    "description": "Navigate deep space tunnels as the little alien. Defy gravity, leap over crumbling tiles, and explore the galaxy.",
+    "icon": "Rocket",
+    "controls": "Arrow Keys or WASD (Space to Jump)",
+    "color": "#38bdf8",
+    "rating": "4.9",
+    "plays": "210.5k",
+    "chromebookOptimized": true
+  },
+  {
+    "id": "cookie-clicker",
+    "title": "Cookie Clicker",
+    "category": "casual",
+    "iframeUrl": "https://www.coolmathgames.com/0-cookie-clicker/play",
+    "description": "Bake trillions of cookies! Hire grandmas, construct alchemy labs, and unlock cosmic cookie upgrades.",
+    "icon": "Sparkles",
+    "controls": "Left Click to Bake & Purchase Upgrades",
+    "color": "#f59e0b",
+    "rating": "4.8",
+    "plays": "185.2k",
+    "chromebookOptimized": true
+  },
+  {
+    "id": "chess",
+    "title": "Chess Classic",
+    "category": "puzzle",
+    "iframeUrl": "https://www.coolmathgames.com/sites/default/files/public_games/56422/",
+    "description": "The timeless battle of tactics and strategy. Play with grandmaster engines or duel friends.",
+    "icon": "Boxes",
+    "controls": "Click & Drag or Tap to Move Pieces",
+    "color": "#10b981",
+    "rating": "4.9",
+    "plays": "94.7k",
+    "chromebookOptimized": true
+  },
+  {
+    "id": "retro-ping-pong",
+    "title": "Retro Ping Pong",
+    "category": "sports",
+    "iframeUrl": "https://www.coolmathgames.com/0-retro-ping-pong/play",
+    "description": "Fast-paced arcade table tennis with gravity wells, bumper obstacles, and action-packed modes.",
+    "icon": "Trophy",
+    "controls": "W / S or Up / Down Arrow Keys",
+    "color": "#8b5cf6",
+    "rating": "4.7",
+    "plays": "68.3k",
+    "chromebookOptimized": true
+  },
+  {
+    "id": "snake",
+    "title": "Snake Classic",
+    "category": "retro",
+    "iframeUrl": "https://www.coolmathgames.com/0-snake/play",
+    "description": "The classic arcade snake. Slither, gobble apples, and avoid colliding with walls or your own tail.",
+    "icon": "Activity",
+    "controls": "Arrow Keys or WASD",
+    "color": "#06b6d4",
+    "rating": "4.8",
+    "plays": "142.1k",
+    "chromebookOptimized": true
+  }
+]
