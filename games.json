@@ -1,0 +1,112 @@
+[
+  {
+    "id": "snake",
+    "title": "Google Snake",
+    "isCustom": true,
+    "description": "Authentic Google Snake arcade remake! Ultra-smooth 60 FPS sub-pixel slither, checkered grass grid, juicy apples & high scores.",
+    "controls": "Arrow Keys or WASD (Space to Pause)",
+    "color": "#10b981",
+    "rating": "5.0",
+    "plays": "320.1k"
+  },
+  {
+    "id": "1v1-lol",
+    "title": "1v1.lol",
+    "iframeUrl": "https://the-pizza-editionfree.github.io/lesson306/lesson-271",
+    "titleAttribute": "Play 1v1 LOL Offline online",
+    "description": "Fast-paced third-person shooter and building simulator. Practice build battles, box fights, and 1v1 duels offline.",
+    "controls": "WASD to Move, Left Click to Shoot, Right Click to Aim, Space to Jump, Z/X/C/V to Build",
+    "color": "#3b82f6",
+    "rating": "5.0",
+    "plays": "582.4k",
+    "sandbox": "allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-modals",
+    "allow": "fullscreen; autoplay; gamepad; accelerometer; gyroscope; clipboard-read; clipboard-write",
+    "referrerPolicy": "strict-origin-when-cross-origin"
+  },
+  {
+    "id": "rocket-goal",
+    "title": "Rocket Goal",
+    "iframeUrl": "https://the-pizza-editionfree.github.io/lesson302/lesson-93",
+    "titleAttribute": "Play Rocket Soccer Derby online",
+    "description": "Rocket Soccer Derby! High-flying rocket cars driving up walls, aerial jumping, boost pads, and explosive acrobatic goals.",
+    "controls": "WASD or Arrow Keys to Drive, Space to Boost / Jump, Shift to Drift",
+    "color": "#f97316",
+    "rating": "4.9",
+    "plays": "394.1k",
+    "sandbox": "allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-modals",
+    "allow": "fullscreen; autoplay; gamepad; accelerometer; gyroscope; clipboard-read; clipboard-write",
+    "referrerPolicy": "strict-origin-when-cross-origin"
+  },
+  {
+    "id": "run-3",
+    "title": "Run 3",
+    "iframeUrl": "https://realpeanut.github.io/games/run3/index.html",
+    "description": "Navigate deep space tunnels as the little alien. Defy gravity, leap over crumbling tiles, and explore the galaxy.",
+    "controls": "Arrow Keys or WASD (Space to Jump)",
+    "color": "#38bdf8",
+    "rating": "4.9",
+    "plays": "210.5k"
+  },
+  {
+    "id": "bloxd-minecrap",
+    "title": "Minecrap",
+    "iframeUrl": "https://games.crazygames.com/en_US/bloxdhop-io/index.html",
+    "description": "Voxel parkour, block building, and speed hopping! Jump across obstacles, craft structures, and compete on leaderboards.",
+    "controls": "WASD to Move, Space to Jump, Shift to Sneak, Left Click to Mine/Place",
+    "color": "#84cc16",
+    "rating": "4.9",
+    "plays": "415.8k"
+  },
+  {
+    "id": "sandbox-city",
+    "title": "Grand Theft Auto (Blocky ver)",
+    "iframeUrl": "https://games.crazygames.com/en_US/sandbox-city---cars-zombies-ragdolls/index.html",
+    "description": "Open-world blocky city sandbox! Steal cars, fight waves of zombies, experiment with goofy ragdoll physics, and explore.",
+    "controls": "WASD to Move, F to Enter/Exit Vehicles, Mouse to Shoot / Attack",
+    "color": "#eab308",
+    "rating": "4.8",
+    "plays": "348.6k"
+  },
+  {
+    "id": "volley-random",
+    "title": "Volley Random",
+    "iframeUrl": "https://the-pizza-editionfree.github.io/lesson306/lesson-158",
+    "titleAttribute": "Play Volley Random online",
+    "description": "Hilarious ragdoll physics volleyball! Random bouncy balls, goofy jumping characters, and sudden spikes.",
+    "controls": "W (Player 1) / Up Arrow (Player 2)",
+    "color": "#ec4899",
+    "rating": "5.0",
+    "plays": "245.1k",
+    "sandbox": "allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-modals",
+    "allow": "fullscreen; autoplay; gamepad; accelerometer; gyroscope; clipboard-read; clipboard-write",
+    "referrerPolicy": "strict-origin-when-cross-origin"
+  },
+  {
+    "id": "baldis-basics",
+    "title": "Baldi's Basics",
+    "iframeUrl": "https://the-pizza-editionfree.github.io/lesson305/lesson-412",
+    "titleAttribute": "Play Baldi's Basics Classic online",
+    "description": "Collect all 7 notebooks and escape the schoolhouse while avoiding Baldi and his erratic faculty.",
+    "controls": "WASD to Move, Mouse to Look, Click to Interact",
+    "color": "#eab308",
+    "rating": "4.9",
+    "plays": "162.8k",
+    "sandbox": "allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-modals",
+    "allow": "fullscreen; autoplay; gamepad; accelerometer; gyroscope; clipboard-read; clipboard-write",
+    "referrerPolicy": "strict-origin-when-cross-origin"
+  },
+  {
+    "id": "ping-pong",
+    "title": "Ping Pong Chaos",
+    "iframeUrl": "https://the-pizza-editionfree.github.io/lesson306/lesson-213",
+    "titleAttribute": "Play Ping Pong Chaos online",
+    "description": "Wild, bouncy 2-player ping pong action with gravity wells, power smashes, and fun physics.",
+    "controls": "W / S or Up / Down Arrow Keys",
+    "color": "#8b5cf6",
+    "rating": "4.8",
+    "plays": "87.3k",
+    "sandbox": "allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-modals",
+    "allow": "fullscreen; autoplay; gamepad; accelerometer; gyroscope; clipboard-read; clipboard-write",
+    "referrerPolicy": "strict-origin-when-cross-origin"
+  }
+]

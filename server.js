@@ -10,8 +10,9 @@ async function createServer() {
   const PORT = process.env.PORT || 3000;
   const isProd = process.env.NODE_ENV === 'production';
 
-  // Serve static assets from public directory
+  // Serve static assets from public and assets directory
   app.use(express.static(path.resolve(__dirname, 'public')));
+  app.use('/assets', express.static(path.resolve(__dirname, 'assets')));
 
   if (!isProd) {
     // Development mode: Vite middleware
