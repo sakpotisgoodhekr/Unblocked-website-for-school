@@ -2,16 +2,15 @@ import React from 'react';
 import {
   Gamepad2,
   Search,
-  Zap,
-  Rocket,
-  Boxes,
-  Activity,
-  Trophy,
-  Sparkles,
   ArrowRight,
   Flame,
   ShieldCheck,
   Cpu,
+  Sparkles,
+  Heart,
+  Tv,
+  ExternalLink,
+  Play,
 } from 'lucide-react';
 import { TiltButton } from './TiltButton';
 
@@ -19,10 +18,12 @@ export const HomeView = ({
   games = [],
   onSelectGame,
   onExploreGames,
-  onSelectCategory,
   darkMode,
   searchQuery,
   setSearchQuery,
+  favorites = [],
+  onToggleFavorite,
+  onOpenMedia,
   themeAccent = '#06b6d4',
 }) => {
   // Featured games on home view
@@ -36,7 +37,7 @@ export const HomeView = ({
 
   return (
     <div className="w-full max-w-5xl mx-auto px-4 py-8 md:py-16 flex flex-col items-center justify-center min-h-[calc(100vh-4rem)]">
-      {/* Central Glass Showcase with "protis" in the middle */}
+      {/* Central Glass Showcase with "Protis" in the middle */}
       <div
         className={`w-full max-w-2xl rounded-3xl p-8 md:p-12 text-center glass-panel shadow-2xl relative overflow-hidden transition-all duration-300 ${
           darkMode ? 'border-white/10' : 'border-slate-300/50'
@@ -52,7 +53,7 @@ export const HomeView = ({
           style={{ backgroundColor: themeAccent }}
         />
 
-        {/* PROTIS Title in Sans Font in the Middle */}
+        {/* Protis Title in Sans Font in the Middle */}
         <div className="relative z-10 flex flex-col items-center">
           <div className="inline-flex items-center gap-2 mb-3">
             <span
@@ -63,7 +64,7 @@ export const HomeView = ({
               }`}
               style={{ borderColor: `${themeAccent}40`, color: themeAccent }}
             >
-              Unblocked Gaming Hub
+              Unblocked Portal
             </span>
           </div>
 
@@ -74,7 +75,7 @@ export const HomeView = ({
                 : 'text-transparent bg-clip-text bg-gradient-to-b from-slate-900 via-slate-800 to-slate-600'
             }`}
           >
-            protis
+            Protis
           </h1>
 
           <p
@@ -82,7 +83,7 @@ export const HomeView = ({
               darkMode ? 'text-slate-400' : 'text-slate-600'
             }`}
           >
-            Minimalist, high-performance unblocked games crafted for Chromebooks.
+            Fast, high-performance unblocked gaming for Chromebooks.
             Zero lag, instantaneous iframe loading, and pure play.
           </p>
 
@@ -116,7 +117,7 @@ export const HomeView = ({
           <div className="flex flex-wrap items-center justify-center gap-3.5 mt-6">
             <TiltButton
               onClick={onExploreGames}
-              className="px-5 py-2.5 rounded-2xl text-sm font-semibold text-white shadow-md shadow-cyan-500/20"
+              className="px-5 py-2.5 rounded-2xl text-sm font-semibold text-white shadow-md shadow-cyan-500/20 cursor-pointer"
               style={{ backgroundColor: themeAccent }}
               scale={1.08}
             >
@@ -127,7 +128,7 @@ export const HomeView = ({
 
             <TiltButton
               onClick={handleRandomPlay}
-              className={`px-5 py-2.5 rounded-2xl text-sm font-semibold border ${
+              className={`px-5 py-2.5 rounded-2xl text-sm font-semibold border cursor-pointer ${
                 darkMode
                   ? 'bg-slate-800/60 text-slate-200 border-white/10'
                   : 'bg-white/70 text-slate-800 border-slate-300/70 shadow-xs'
@@ -157,8 +158,114 @@ export const HomeView = ({
         </div>
       </div>
 
-      {/* Featured Games Section or Ready State */}
+      {/* YouTube Video Library Hub Section (Replaced TikTok and Twitch) */}
       <div className="w-full max-w-4xl mt-12">
+        <div className="flex items-center justify-between mb-4 px-2">
+          <div className="flex items-center gap-2.5">
+            <div className="w-6 h-6 rounded-lg bg-red-600 text-white flex items-center justify-center shadow-md">
+              <Play size={12} fill="white" />
+            </div>
+            <div>
+              <h2
+                className={`text-base font-bold tracking-tight ${
+                  darkMode ? 'text-slate-200' : 'text-slate-800'
+                }`}
+              >
+                YouTube Video Library
+              </h2>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => onOpenMedia && onOpenMedia('youtube')}
+            className="text-xs text-red-400 hover:text-red-300 font-semibold flex items-center gap-1 cursor-pointer transition-colors"
+          >
+            <span>Open Library</span>
+            <ArrowRight size={13} />
+          </button>
+        </div>
+
+        {/* 4 Featured Video Thumbnails with Authentic YouTube Badges */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[
+            {
+              id: 'jfKfPfyJRdk',
+              title: 'Lofi Hip Hop Radio - Beats to Relax/Study to',
+              channel: 'Lofi Girl',
+              duration: 'LIVE',
+              isLive: true,
+              views: '74.2M views',
+            },
+            {
+              id: 'WPni755-Krg',
+              title: 'Minecraft OST - Relaxing Music Collection',
+              channel: 'C418 / Ambient',
+              duration: '58:45',
+              views: '18.4M views',
+            },
+            {
+              id: '7lCDEYXw3mM',
+              title: 'Google Snake World Record - 252 Max Score',
+              channel: 'Arcade Master',
+              duration: '18:12',
+              views: '3.4M views',
+            },
+            {
+              id: 'b6vS2G4L2-U',
+              title: 'Rocket Derby - Top 50 Insane Freestyle Goals',
+              channel: 'Derby Highlights',
+              duration: '11:34',
+              views: '840K views',
+            },
+          ].map((vid) => (
+            <div
+              key={vid.id}
+              onClick={() => onOpenMedia && onOpenMedia(vid.id)}
+              className="group flex flex-col rounded-2xl glass-card border border-white/10 overflow-hidden cursor-pointer transition-all duration-200 transform hover:-translate-y-1 hover:shadow-xl hover:border-red-500/40"
+            >
+              <div className="relative aspect-video w-full bg-slate-900 overflow-hidden">
+                <img
+                  src={`https://img.youtube.com/vi/${vid.id}/mqdefault.jpg`}
+                  alt={vid.title}
+                  className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
+                  loading="lazy"
+                />
+                {vid.isLive ? (
+                  <span className="absolute bottom-1.5 right-1.5 px-1.5 py-0.5 rounded-md bg-red-600 text-white font-bold text-[9px] uppercase tracking-wider">
+                    LIVE
+                  </span>
+                ) : (
+                  <span className="absolute bottom-1.5 right-1.5 px-1.5 py-0.5 rounded-md bg-black/80 text-white font-mono text-[9px]">
+                    {vid.duration}
+                  </span>
+                )}
+                <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                  <div className="w-10 h-10 rounded-full bg-red-600 text-white flex items-center justify-center shadow-lg">
+                    <Play size={16} fill="white" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-3">
+                <h4
+                  className={`text-xs font-bold line-clamp-2 leading-snug group-hover:text-red-400 transition-colors ${
+                    darkMode ? 'text-white' : 'text-slate-900'
+                  }`}
+                >
+                  {vid.title}
+                </h4>
+                <div className="flex items-center justify-between mt-2 pt-1.5 border-t border-white/5 text-[10px] text-slate-400">
+                  <span className="truncate">{vid.channel}</span>
+                  <span className="shrink-0">{vid.views}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Featured Games Section */}
+      <div className="w-full max-w-4xl mt-14">
         <div className="flex items-center justify-between mb-4 px-2">
           <div className="flex items-center gap-2">
             <Flame size={18} className="text-rose-500" />
@@ -167,7 +274,7 @@ export const HomeView = ({
                 darkMode ? 'text-slate-200' : 'text-slate-800'
               }`}
             >
-              Featured & Popular
+              Featured Games
             </h2>
           </div>
           {games.length > 0 && (
@@ -199,108 +306,102 @@ export const HomeView = ({
                 darkMode ? 'text-white' : 'text-slate-900'
               }`}
             >
-              Library Ready for Your Custom Games
+              Library Ready
             </h3>
             <p
               className={`text-xs mt-1 max-w-md mx-auto ${
                 darkMode ? 'text-slate-400' : 'text-slate-500'
               }`}
             >
-              All previous games have been cleared. Tell me which games or iframe links you'd like to add, and they'll appear here immediately!
+              Games loaded from the iframe catalog will appear here.
             </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-            {popularGames.map((game) => (
-              <div
-                key={game.id}
-                onClick={() => onSelectGame(game)}
-                className={`group p-4 rounded-2xl glass-card transition-all duration-200 cursor-pointer transform hover:-translate-y-1 hover:shadow-xl ${
-                  darkMode
-                    ? 'hover:border-cyan-500/40 hover:shadow-cyan-500/10'
-                    : 'hover:border-cyan-500/30 hover:shadow-slate-400/20'
-                }`}
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold shadow-md"
-                    style={{ backgroundColor: game.color }}
+            {popularGames.map((game) => {
+              const isFav = favorites.includes(game.id);
+
+              return (
+                <div
+                  key={game.id}
+                  onClick={() => onSelectGame(game)}
+                  className={`group relative p-4 rounded-2xl glass-card transition-all duration-200 cursor-pointer transform hover:-translate-y-1 hover:shadow-xl ${
+                    darkMode
+                      ? 'hover:border-cyan-500/40 hover:shadow-cyan-500/10'
+                      : 'hover:border-cyan-500/30 hover:shadow-slate-400/20'
+                  }`}
+                >
+                  {/* Top-Right Heart Button */}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onToggleFavorite(game.id);
+                    }}
+                    className={`absolute top-3 right-3 z-10 p-1.5 rounded-xl cursor-pointer transition-all duration-200 ${
+                      isFav
+                        ? 'opacity-100 text-rose-500 bg-rose-500/15 border border-rose-500/30 shadow-md shadow-rose-500/10'
+                        : 'opacity-0 group-hover:opacity-100 text-slate-400 hover:text-rose-400 bg-slate-900/80 hover:bg-slate-900 border border-white/10 shadow-lg'
+                    }`}
+                    title={isFav ? 'Remove from favorites' : 'Add to favorites'}
+                    aria-label={isFav ? 'Remove from favorites' : 'Add to favorites'}
                   >
-                    <Gamepad2 size={20} />
+                    <Heart
+                      size={15}
+                      fill={isFav ? 'currentColor' : 'none'}
+                      className={`transition-transform duration-150 active:scale-75 ${
+                        isFav ? 'scale-105' : 'hover:scale-110'
+                      }`}
+                    />
+                  </button>
+
+                  <div className="flex items-start justify-between mb-3">
+                    <div
+                      className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold shadow-md"
+                      style={{ backgroundColor: game.color }}
+                    >
+                      <Gamepad2 size={20} />
+                    </div>
+                    <span
+                      className={`text-[11px] font-semibold px-2 py-0.5 rounded-full pr-7 ${
+                        darkMode ? 'bg-slate-800 text-slate-300' : 'bg-slate-100 text-slate-700'
+                      }`}
+                    >
+                      ★ {game.rating}
+                    </span>
                   </div>
-                  <span
-                    className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
-                      darkMode ? 'bg-slate-800 text-slate-300' : 'bg-slate-100 text-slate-700'
+
+                  <h3
+                    className={`text-sm font-bold truncate ${
+                      darkMode ? 'text-white' : 'text-slate-900'
                     }`}
                   >
-                    ★ {game.rating}
-                  </span>
-                </div>
-
-                <h3
-                  className={`text-sm font-bold truncate ${
-                    darkMode ? 'text-white' : 'text-slate-900'
-                  }`}
-                >
-                  {game.title}
-                </h3>
-                <p
-                  className={`text-xs line-clamp-2 mt-1 leading-relaxed ${
-                    darkMode ? 'text-slate-400' : 'text-slate-500'
-                  }`}
-                >
-                  {game.description}
-                </p>
-
-                <div className="mt-3 flex items-center justify-between pt-2 border-t border-white/5">
-                  <span className="text-[11px] text-slate-500">{game.plays} plays</span>
-                  <span
-                    className={`text-xs font-semibold flex items-center gap-1 ${
-                      darkMode ? 'text-cyan-400' : 'text-cyan-600'
+                    {game.title}
+                  </h3>
+                  <p
+                    className={`text-xs line-clamp-2 mt-1 leading-relaxed ${
+                      darkMode ? 'text-slate-400' : 'text-slate-500'
                     }`}
                   >
-                    Play
-                    <ArrowRight size={12} />
-                  </span>
+                    {game.description}
+                  </p>
+
+                  <div className="mt-3 flex items-center justify-between pt-2 border-t border-white/5">
+                    <span className="text-[11px] text-slate-500">{game.plays} plays</span>
+                    <span
+                      className={`text-xs font-semibold flex items-center gap-1 ${
+                        darkMode ? 'text-cyan-400' : 'text-cyan-600'
+                      }`}
+                    >
+                      Play
+                      <ArrowRight size={12} />
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
-      </div>
-
-      {/* Quick Category Jump Bar */}
-      <div className="w-full max-w-2xl mt-10 text-center">
-        <p className={`text-xs mb-3 font-medium ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>
-          Quick Categories
-        </p>
-        <div className="flex flex-wrap items-center justify-center gap-2.5">
-          {[
-            { id: 'action', label: 'Action', icon: Zap },
-            { id: 'arcade', label: 'Arcade', icon: Rocket },
-            { id: 'puzzle', label: 'Puzzle', icon: Boxes },
-            { id: 'retro', label: 'Retro', icon: Activity },
-            { id: 'sports', label: 'Sports', icon: Trophy },
-            { id: 'casual', label: 'Casual', icon: Sparkles },
-          ].map((cat) => {
-            const Icon = cat.icon;
-            return (
-              <TiltButton
-                key={cat.id}
-                onClick={() => onSelectCategory(cat.id)}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-medium ${
-                  darkMode
-                    ? 'bg-slate-800/60 text-slate-300 border border-white/5'
-                    : 'bg-white/70 text-slate-700 border border-slate-200/60 shadow-xs'
-                }`}
-                scale={1.08}
-              >
-                <Icon size={14} className="text-cyan-400" />
-                <span>{cat.label}</span>
-              </TiltButton>
-            );
-          })}
-        </div>
       </div>
     </div>
   );

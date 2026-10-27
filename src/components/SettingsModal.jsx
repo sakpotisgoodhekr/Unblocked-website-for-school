@@ -252,7 +252,7 @@ export const SettingsModal = ({
             </div>
           </div>
 
-          {/* Section 3: Shooting Stars Background */}
+          {/* Section 3: Stars & Shooting Stars Background */}
           <div className="p-4 rounded-2xl glass-card space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -269,14 +269,14 @@ export const SettingsModal = ({
                       darkMode ? 'text-white' : 'text-slate-900'
                     }`}
                   >
-                    Shooting Stars
+                    Cosmic Starfield & Shooting Stars
                   </div>
                   <div
                     className={`text-xs ${
                       darkMode ? 'text-slate-400' : 'text-slate-500'
                     }`}
                   >
-                    Canvas starfield & meteor trails
+                    Background twinkle stars & shooting stars
                   </div>
                 </div>
               </div>
@@ -287,12 +287,50 @@ export const SettingsModal = ({
                 className={`relative inline-flex h-7 w-13 items-center rounded-full transition-colors duration-200 ease-in-out cursor-pointer ${
                   starsEnabled ? 'bg-purple-600' : 'bg-slate-300'
                 }`}
-                title="Toggle Shooting Stars"
-                aria-label="Toggle Shooting Stars"
+                title="Toggle Stars"
+                aria-label="Toggle Stars"
               >
                 <span
                   className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform duration-200 ease-in-out shadow-sm ${
                     starsEnabled ? 'translate-x-7' : 'translate-x-1'
+                  }`}
+                />
+              </button>
+            </div>
+
+            {/* Shooting Stars Specific Toggle */}
+            <div className="pt-2 border-t border-white/5 flex items-center justify-between">
+              <div>
+                <span
+                  className={`text-xs font-medium block ${
+                    darkMode ? 'text-slate-300' : 'text-slate-700'
+                  }`}
+                >
+                  Shooting Stars
+                </span>
+                <span className="text-[10px] text-slate-400">
+                  Tiny white dot with greyish tail
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() =>
+                  updateSettings({
+                    shootingStarsEnabled:
+                      settings.shootingStarsEnabled === undefined
+                        ? false
+                        : !settings.shootingStarsEnabled,
+                  })
+                }
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ease-in-out cursor-pointer ${
+                  settings.shootingStarsEnabled !== false ? 'bg-cyan-500' : 'bg-slate-300'
+                }`}
+                title="Toggle Shooting Stars"
+                aria-label="Toggle Shooting Stars"
+              >
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ease-in-out shadow-sm ${
+                    settings.shootingStarsEnabled !== false ? 'translate-x-6' : 'translate-x-1'
                   }`}
                 />
               </button>

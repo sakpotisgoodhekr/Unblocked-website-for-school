@@ -1,18 +1,7 @@
-export const CATEGORIES = [
-  { id: 'all', label: 'All Games', iconName: 'LayoutGrid' },
-  { id: 'action', label: 'Action', iconName: 'Zap' },
-  { id: 'arcade', label: 'Arcade', iconName: 'Rocket' },
-  { id: 'puzzle', label: 'Puzzle', iconName: 'Boxes' },
-  { id: 'retro', label: 'Retro', iconName: 'Activity' },
-  { id: 'sports', label: 'Sports', iconName: 'Trophy' },
-  { id: 'casual', label: 'Casual', iconName: 'Sparkles' },
-  { id: 'favorites', label: 'Favorites', iconName: 'Heart' },
-];
-
 export const THEME_CONFIGS = {
   protis: {
-    name: 'Default (protis)',
-    title: 'protis - Unblocked Games',
+    name: 'Default (Protis)',
+    title: 'Protis - Unblocked Games',
     favicon: '/favicon.svg',
     darkBg: '#060913',
     lightBg: '#f8fafc',
@@ -85,6 +74,7 @@ export const THEME_CONFIGS = {
 export const DEFAULT_SETTINGS = {
   darkMode: true,
   starsEnabled: true,
+  shootingStarsEnabled: true,
   starDensity: 'medium',
   cloakPreset: 'protis',
   panicKey: 'Escape',

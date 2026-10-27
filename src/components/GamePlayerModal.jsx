@@ -11,6 +11,7 @@ import {
   Gamepad2,
 } from 'lucide-react';
 import { TiltButton } from './TiltButton';
+import { GoogleSnake } from './GoogleSnake';
 
 export const GamePlayerModal = ({
   game,
@@ -26,6 +27,8 @@ export const GamePlayerModal = ({
   const [showControls, setShowControls] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  const isCustomGame = game?.isCustom || game?.id === 'snake';
+
   const handleIframeLoad = () => {
     setLoading(false);
     if (iframeRef.current && iframeRef.current.contentWindow) {
@@ -34,6 +37,12 @@ export const GamePlayerModal = ({
   };
 
   const handleReload = () => {
+    if (isCustomGame) {
+      // Custom game resets internally or forces re-render
+      setLoading(true);
+      setTimeout(() => setLoading(false), 200);
+      return;
+    }
     setLoading(true);
     if (iframeRef.current) {
       iframeRef.current.src = game.iframeUrl;
@@ -58,7 +67,9 @@ export const GamePlayerModal = ({
   }, []);
 
   const handlePopout = () => {
-    window.open(game.iframeUrl, '_blank');
+    if (game.iframeUrl) {
+      window.open(game.iframeUrl, '_blank');
+    }
   };
 
   const getButtonClass = () => {
@@ -102,21 +113,27 @@ export const GamePlayerModal = ({
             >
               {game.title}
             </h2>
-            <span
-              className="text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full"
-              style={{
-                backgroundColor: `${themeAccent}20`,
-                color: themeAccent,
-                border: `1px solid ${themeAccent}40`,
-              }}
-            >
-              {game.category}
-            </span>
+            {isCustomGame ? (
+              <span className="text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
+                Custom Built-in 60FPS
+              </span>
+            ) : game.category ? (
+              <span
+                className="text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full"
+                style={{
+                  backgroundColor: `${themeAccent}20`,
+                  color: themeAccent,
+                  border: `1px solid ${themeAccent}40`,
+                }}
+              >
+                {game.category}
+              </span>
+            ) : null}
           </div>
         </div>
 
-        {/* Right Action Buttons with 3D Tilt */}
-        <div className="flex items-center gap-2">
+        {/* Right Action Buttons with 3D Tilt (spaced away from fixed top-right FPS counter) */}
+        <div className="flex items-center gap-2 mr-20 sm:mr-24">
           <TiltButton
             onClick={() => setShowControls(!showControls)}
             className={getButtonClass()}
@@ -149,15 +166,17 @@ export const GamePlayerModal = ({
             <RotateCw size={17} />
           </TiltButton>
 
-          <TiltButton
-            onClick={handlePopout}
-            className={getButtonClass()}
-            title="Open in new window"
-            ariaLabel="Popout"
-            scale={1.12}
-          >
-            <ExternalLink size={17} />
-          </TiltButton>
+          {game.iframeUrl && (
+            <TiltButton
+              onClick={handlePopout}
+              className={getButtonClass()}
+              title="Open in new window"
+              ariaLabel="Popout"
+              scale={1.12}
+            >
+              <ExternalLink size={17} />
+            </TiltButton>
+          )}
 
           <TiltButton
             onClick={handleToggleFullscreen}
@@ -191,7 +210,7 @@ export const GamePlayerModal = ({
           <div className="flex items-center gap-2">
             <Gamepad2 size={16} className="text-cyan-400" />
             <span>
-              <b>Controls:</b> {game.controls}
+              <b>Controls:</b> {game.controls || 'Arrow Keys or WASD'}
             </span>
           </div>
           <button
@@ -204,44 +223,61 @@ export const GamePlayerModal = ({
         </div>
       )}
 
-      {/* Main Iframe Player Container */}
-      <div className="w-full max-w-6xl mx-auto flex-1 relative rounded-2xl md:rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-black">
-        {loading && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-900/90 z-10 gap-3">
-            <div
-              className="w-10 h-10 border-4 rounded-full animate-spin"
-              style={{
-                borderColor: `${themeAccent}30`,
-                borderTopColor: themeAccent,
-              }}
-            />
-            <p className="text-xs text-slate-400 font-medium tracking-wide">
-              Loading {game.title}...
-            </p>
+      {/* Main Game Player Container */}
+      <div className="w-full max-w-6xl mx-auto flex-1 relative rounded-2xl md:rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-black flex items-center justify-center">
+        {isCustomGame ? (
+          <div className="w-full h-full flex items-center justify-center bg-slate-950">
+            <GoogleSnake darkMode={darkMode} themeAccent={themeAccent} />
           </div>
-        )}
+        ) : (
+          <>
+            {loading && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-900/90 z-10 gap-3">
+                <div
+                  className="w-10 h-10 border-4 rounded-full animate-spin"
+                  style={{
+                    borderColor: `${themeAccent}30`,
+                    borderTopColor: themeAccent,
+                  }}
+                />
+                <p className="text-xs text-slate-400 font-medium tracking-wide">
+                  Loading {game.title}...
+                </p>
+              </div>
+            )}
 
-        <iframe
-          ref={iframeRef}
-          src={game.iframeUrl}
-          title={game.title}
-          onLoad={handleIframeLoad}
-          className="w-full h-full border-0 block"
-          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen; web-share; clipboard-read; clipboard-write"
-          sandbox="allow-scripts allow-popups allow-forms allow-same-origin allow-popups-to-escape-sandbox allow-downloads allow-storage-access-by-user-activation allow-pointer-lock allow-modals"
-        />
+            <iframe
+              ref={iframeRef}
+              src={game.iframeUrl}
+              title={game.titleAttribute || game.title}
+              onLoad={handleIframeLoad}
+              className="w-full h-full border-0 block"
+              allow={
+                game.allow ||
+                "fullscreen; autoplay; gamepad; accelerometer; gyroscope; clipboard-read; clipboard-write; microphone; focus-without-user-activation *; screen-wake-lock; encrypted-media; picture-in-picture"
+              }
+              sandbox={
+                game.sandbox ||
+                "allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-modals allow-downloads"
+              }
+              referrerPolicy={game.referrerPolicy || "strict-origin-when-cross-origin"}
+            />
+          </>
+        )}
       </div>
 
-      {/* Unblocked Tip for third-party embeds */}
+      {/* Unblocked Tip footer */}
       <div className="w-full max-w-6xl mx-auto mt-1 flex items-center justify-between text-[11px] text-slate-400 px-2">
-        <span>Tip: Use keyboard arrows / WASD to control.</span>
-        <button
-          type="button"
-          onClick={handlePopout}
-          className="text-cyan-400 hover:text-cyan-300 underline cursor-pointer"
-        >
-          Having trouble? Open directly in new window ↗
-        </button>
+        <span>Tip: Press ESC or your configured panic key anytime to return.</span>
+        {game.iframeUrl && (
+          <button
+            type="button"
+            onClick={handlePopout}
+            className="text-cyan-400 hover:text-cyan-300 underline cursor-pointer"
+          >
+            Having trouble? Open directly in new window ↗
+          </button>
+        )}
       </div>
     </div>
   );

@@ -11,6 +11,8 @@ import { GamePlayerModal } from './components/GamePlayerModal';
 import { SettingsModal } from './components/SettingsModal';
 import { ShootingStarsCanvas } from './components/ShootingStarsCanvas';
 import { TiltButton } from './components/TiltButton';
+import { MediaViewerModal } from './components/MediaViewerModal';
+import { FpsCounter } from './components/FpsCounter';
 import { THEME_CONFIGS, DEFAULT_SETTINGS } from './constants';
 
 const RANDOM_TIPS = [
@@ -26,9 +28,10 @@ export default function App() {
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('home');
-  const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGame, setSelectedGame] = useState(null);
+  const [activeMediaPlatform, setActiveMediaPlatform] = useState(null);
+  const [activeVideoId, setActiveVideoId] = useState(null);
 
   // Initial Fullsite Loading Screen (Fixes blank page on GitHub Pages)
   const [appLoading, setAppLoading] = useState(true);
@@ -184,13 +187,14 @@ export default function App() {
   // Panic Key Quick Escape Handler
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === settings.panicKey && selectedGame) {
-        setSelectedGame(null);
+      if (e.key === settings.panicKey) {
+        if (selectedGame) setSelectedGame(null);
+        if (activeMediaPlatform) setActiveMediaPlatform(null);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [settings.panicKey, selectedGame]);
+  }, [settings.panicKey, selectedGame, activeMediaPlatform]);
 
   const updateSettings = (updates) => {
     setSettings((prev) => ({ ...prev, ...updates }));
@@ -209,11 +213,6 @@ export default function App() {
       setSettings(DEFAULT_SETTINGS);
       alert('Data reset successfully.');
     }
-  };
-
-  const handleSelectCategory = (cat) => {
-    setSelectedCategory(cat);
-    setActiveTab('games');
   };
 
   const activeBgColor = settings.darkMode ? themeConfig.darkBg : themeConfig.lightBg;
@@ -238,7 +237,7 @@ export default function App() {
           <div className="relative z-10 w-full max-w-sm rounded-3xl p-8 glass-panel shadow-2xl text-center border border-white/10 flex flex-col items-center">
             {/* Wordmark */}
             <h1 className="font-sans text-5xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-slate-400 select-none mb-2">
-              protis
+              Protis
             </h1>
 
             <p className="text-xs text-slate-400 font-medium mb-6">
@@ -257,7 +256,7 @@ export default function App() {
               {/* Skip Button next to the loading bar */}
               <TiltButton
                 onClick={() => setAppLoading(false)}
-                className="px-3 py-1 rounded-xl text-xs font-bold text-white bg-slate-800/90 hover:bg-slate-700 border border-white/10 shadow-sm shrink-0 cursor-pointer"
+                className="px-3 py-1 rounded-xl text-xs font-bold text-white bg-slate-800/90 hover:bg-slate-700 border border-white/10 shadow-sm shrink-0 cursor-pointer transition-colors"
                 title="Skip loading screen"
                 scale={1.12}
                 maxTilt={20}
@@ -285,20 +284,23 @@ export default function App() {
         darkMode={settings.darkMode}
         themeConfig={themeConfig}
         enabled={settings.starsEnabled}
+        starsEnabled={settings.starsEnabled}
+        shootingStarsEnabled={settings.shootingStarsEnabled !== false}
         density={settings.starDensity}
         batterySaver={settings.batterySaver}
       />
 
-      {/* Minimalist Sidebar with expanding 3D icon-only buttons */}
+      {/* Minimalist Sidebar with expanding 3D icon-only buttons: Home, Games, Favorites, Settings */}
       <Sidebar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
-        selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
         darkMode={settings.darkMode}
         favoritesCount={favorites.length}
         themeAccent={themeConfig.accent}
       />
+
+      {/* Real-Time Persistent FPS Counter in Top Right at all times */}
+      <FpsCounter darkMode={settings.darkMode} themeAccent={themeConfig.accent} />
 
       {/* Main Content Area */}
       <main className="md:pl-22 pb-24 md:pb-8 transition-all duration-300 min-h-screen flex flex-col justify-between">
@@ -313,11 +315,11 @@ export default function App() {
                 : 'text-slate-900 hover:text-cyan-600'
             }`}
           >
-            protis
+            Protis
           </button>
 
-          {/* Quick status & Theme Active Pill */}
-          <div className="flex items-center gap-3">
+          {/* Quick status & Theme Active Pill (spaced to accommodate top-right FPS counter) */}
+          <div className="flex items-center gap-3 pr-24 sm:pr-28">
             {settings.cloakPreset !== 'protis' && (
               <span
                 className="text-xs px-3 py-1 rounded-full font-bold text-white shadow-xs"
@@ -347,20 +349,29 @@ export default function App() {
               games={games}
               onSelectGame={(g) => setSelectedGame(g)}
               onExploreGames={() => setActiveTab('games')}
-              onSelectCategory={handleSelectCategory}
               darkMode={settings.darkMode}
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
+              favorites={favorites}
+              onToggleFavorite={handleToggleFavorite}
+              onOpenMedia={(arg) => {
+                if (typeof arg === 'string' && arg !== 'youtube') {
+                  setActiveVideoId(arg);
+                } else {
+                  setActiveVideoId(null);
+                }
+                setActiveMediaPlatform('youtube');
+              }}
               themeAccent={themeConfig.accent}
             />
           )}
 
-          {activeTab === 'games' && (
+          {(activeTab === 'games' || activeTab === 'favorites') && (
             <GamesView
               games={games}
               loading={loading}
-              selectedCategory={selectedCategory}
-              setSelectedCategory={setSelectedCategory}
+              isFavoritesMode={activeTab === 'favorites'}
+              onSwitchToGames={() => setActiveTab('games')}
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
               favorites={favorites}
@@ -386,6 +397,19 @@ export default function App() {
           onClose={() => setActiveTab('home')}
           onResetData={handleResetData}
           themeConfig={themeConfig}
+        />
+      )}
+
+      {/* YouTube Video Library Modal (Replaced TikTok and Twitch) */}
+      {activeMediaPlatform && (
+        <MediaViewerModal
+          onClose={() => {
+            setActiveMediaPlatform(null);
+            setActiveVideoId(null);
+          }}
+          darkMode={settings.darkMode}
+          themeAccent={themeConfig.accent}
+          initialVideoId={activeVideoId}
         />
       )}
 

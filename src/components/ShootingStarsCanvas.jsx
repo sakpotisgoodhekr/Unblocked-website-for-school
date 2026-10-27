@@ -4,13 +4,19 @@ export const ShootingStarsCanvas = ({
   darkMode = true,
   themeConfig = null,
   enabled = true,
+  starsEnabled = true,
+  shootingStarsEnabled = true,
   density = 'medium',
   batterySaver = false,
 }) => {
   const canvasRef = useRef(null);
 
+  // Fallbacks if enabled is used as overall toggle
+  const showStars = enabled && starsEnabled !== false;
+  const showShootingStars = enabled && shootingStarsEnabled !== false;
+
   useEffect(() => {
-    if (!enabled) return;
+    if (!showStars && !showShootingStars) return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -23,21 +29,21 @@ export const ShootingStarsCanvas = ({
     let height = 0;
     let stars = [];
     let shootingStars = [];
-    let nextShootingStarTime = performance.now() + 1000;
+    let nextShootingStarTime = performance.now() + 500;
 
     const getStarCount = () => {
       if (batterySaver) return 35;
-      if (density === 'low') return 55;
-      if (density === 'high') return 200;
-      return 110;
+      if (density === 'low') return 60;
+      if (density === 'high') return 220;
+      return 120;
     };
 
     const resize = () => {
       width = window.innerWidth;
       height = window.innerHeight;
       const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       const count = getStarCount();
@@ -46,42 +52,37 @@ export const ShootingStarsCanvas = ({
         stars.push({
           x: Math.random() * width,
           y: Math.random() * height,
-          radius: Math.random() * 1.4 + 0.6,
-          baseAlpha: Math.random() * 0.6 + 0.2,
-          alpha: Math.random(),
-          twinkleSpeed: Math.random() * 0.03 + 0.01,
+          radius: Math.random() * 1.3 + 0.6,
+          baseAlpha: Math.random() * 0.5 + 0.25,
           phase: Math.random() * Math.PI * 2,
+          twinkleSpeed: Math.random() * 0.025 + 0.008,
         });
       }
     };
 
     const spawnShootingStar = () => {
-      const angle = (Math.PI / 180) * (30 + Math.random() * 20);
-      const startX = Math.random() * width * 0.9;
+      // Shooting star flies from top-left quadrant down towards bottom-right
+      const angle = (Math.PI / 180) * (32 + Math.random() * 16);
+      const startX = Math.random() * width * 0.95;
       const startY = Math.random() * height * 0.45;
-      const maxLife = Math.random() * 45 + 35;
+      const maxLife = Math.random() * 40 + 35;
 
       shootingStars.push({
         x: startX,
         y: startY,
-        length: Math.random() * 110 + 70,
-        speed: Math.random() * 9 + 8,
+        length: Math.random() * 80 + 60,
+        speed: Math.random() * 7 + 8,
         angle,
-        thickness: Math.random() * 1.5 + 1.2,
-        opacity: 1,
+        thickness: Math.random() * 0.4 + 1.2, // Clean thin streak: 1.2 - 1.6px
         life: 0,
         maxLife,
       });
     };
 
-    let lastFrame = performance.now();
-
     const loop = (time) => {
-      lastFrame = time;
-
       ctx.clearRect(0, 0, width, height);
 
-      // Background color from theme configuration
+      // Background color gradient
       const bgColor = darkMode
         ? (themeConfig?.darkBg || '#060913')
         : (themeConfig?.lightBg || '#f8fafc');
@@ -92,75 +93,81 @@ export const ShootingStarsCanvas = ({
       ctx.fillStyle = bgGrad;
       ctx.fillRect(0, 0, width, height);
 
-      // Render Twinkling Stars
-      const starColor = darkMode
-        ? (themeConfig?.starTintDark || '#e2e8f0')
-        : (themeConfig?.starTintLight || '#64748b');
+      // 1. Render Twinkling Stars
+      if (showStars) {
+        const starColor = darkMode
+          ? (themeConfig?.starTintDark || '#e2e8f0')
+          : (themeConfig?.starTintLight || '#64748b');
 
-      for (let i = 0; i < stars.length; i++) {
-        const s = stars[i];
-        s.phase += s.twinkleSpeed;
-        const currentAlpha = Math.max(0.08, Math.min(1, s.baseAlpha + Math.sin(s.phase) * 0.3));
+        for (let i = 0; i < stars.length; i++) {
+          const s = stars[i];
+          s.phase += s.twinkleSpeed;
+          const currentAlpha = Math.max(0.1, Math.min(1, s.baseAlpha + Math.sin(s.phase) * 0.35));
 
-        ctx.fillStyle = starColor;
-        ctx.globalAlpha = currentAlpha * (darkMode ? 0.9 : 0.5);
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
-        ctx.fill();
+          ctx.fillStyle = starColor;
+          ctx.globalAlpha = currentAlpha * (darkMode ? 0.9 : 0.55);
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+          ctx.fill();
+        }
         ctx.globalAlpha = 1;
       }
 
-      // Check shooting star spawning
-      if (time > nextShootingStarTime) {
+      // 2. Check shooting star spawning
+      if (showShootingStars && time > nextShootingStarTime) {
         spawnShootingStar();
         const delay = batterySaver
-          ? Math.random() * 4000 + 3500
-          : Math.random() * 2500 + 1500;
+          ? Math.random() * 3500 + 3000
+          : Math.random() * 2000 + 1200;
         nextShootingStarTime = time + delay;
       }
 
-      // Render Shooting Stars
-      for (let i = shootingStars.length - 1; i >= 0; i--) {
-        const ss = shootingStars[i];
-        ss.life++;
+      // 3. Render Shooting Stars: Tiny white dot with a greyish tail behind it
+      if (showShootingStars) {
+        for (let i = shootingStars.length - 1; i >= 0; i--) {
+          const ss = shootingStars[i];
+          ss.life++;
 
-        const dx = Math.cos(ss.angle) * ss.speed;
-        const dy = Math.sin(ss.angle) * ss.speed;
-        ss.x += dx;
-        ss.y += dy;
+          const dx = Math.cos(ss.angle) * ss.speed;
+          const dy = Math.sin(ss.angle) * ss.speed;
+          ss.x += dx;
+          ss.y += dy;
 
-        const tailX = ss.x - Math.cos(ss.angle) * ss.length;
-        const tailY = ss.y - Math.sin(ss.angle) * ss.length;
+          const tailX = ss.x - Math.cos(ss.angle) * ss.length;
+          const tailY = ss.y - Math.sin(ss.angle) * ss.length;
 
-        const progress = ss.life / ss.maxLife;
-        let alpha = progress < 0.2 ? progress / 0.2 : 1 - (progress - 0.2) / 0.8;
-        alpha = Math.max(0, Math.min(1, alpha));
+          const progress = ss.life / ss.maxLife;
+          let alpha = progress < 0.25 ? progress / 0.25 : 1 - (progress - 0.25) / 0.75;
+          alpha = Math.max(0, Math.min(1, alpha));
 
-        const streakGrad = ctx.createLinearGradient(tailX, tailY, ss.x, ss.y);
-        const streakAccent = themeConfig?.accent || '#06b6d4';
-        streakGrad.addColorStop(0, 'rgba(255, 255, 255, 0)');
-        streakGrad.addColorStop(0.6, `${streakAccent}`);
-        streakGrad.addColorStop(1, '#ffffff');
+          // Elegant Greyish tail gradient behind the head
+          const streakGrad = ctx.createLinearGradient(tailX, tailY, ss.x, ss.y);
+          streakGrad.addColorStop(0, 'rgba(150, 155, 165, 0)');
+          streakGrad.addColorStop(0.4, 'rgba(165, 172, 184, 0.25)');
+          streakGrad.addColorStop(0.8, 'rgba(185, 192, 203, 0.55)');
+          streakGrad.addColorStop(1, 'rgba(225, 230, 240, 0.85)');
 
-        ctx.strokeStyle = streakGrad;
-        ctx.globalAlpha = alpha;
-        ctx.lineWidth = ss.thickness;
-        ctx.lineCap = 'round';
+          ctx.strokeStyle = streakGrad;
+          ctx.globalAlpha = alpha;
+          ctx.lineWidth = ss.thickness;
+          ctx.lineCap = 'round';
 
-        ctx.beginPath();
-        ctx.moveTo(tailX, tailY);
-        ctx.lineTo(ss.x, ss.y);
-        ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(tailX, tailY);
+          ctx.lineTo(ss.x, ss.y);
+          ctx.stroke();
 
-        // Glowing Star Head
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        ctx.arc(ss.x, ss.y, ss.thickness * 1.4, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.globalAlpha = 1;
+          // Tiny White Dot head at the leading tip (radius 1.5px)
+          ctx.fillStyle = '#ffffff';
+          ctx.beginPath();
+          ctx.arc(ss.x, ss.y, 1.5, 0, Math.PI * 2);
+          ctx.fill();
 
-        if (ss.life >= ss.maxLife || ss.x > width + 100 || ss.y > height + 100) {
-          shootingStars.splice(i, 1);
+          ctx.globalAlpha = 1;
+
+          if (ss.life >= ss.maxLife || ss.x > width + 100 || ss.y > height + 100) {
+            shootingStars.splice(i, 1);
+          }
         }
       }
 
@@ -175,7 +182,6 @@ export const ShootingStarsCanvas = ({
       if (document.hidden) {
         cancelAnimationFrame(animationId);
       } else {
-        lastFrame = performance.now();
         animationId = requestAnimationFrame(loop);
       }
     };
@@ -186,13 +192,14 @@ export const ShootingStarsCanvas = ({
       document.removeEventListener('visibilitychange', handleVisibility);
       cancelAnimationFrame(animationId);
     };
-  }, [darkMode, themeConfig, enabled, density, batterySaver]);
+  }, [darkMode, themeConfig, showStars, showShootingStars, density, batterySaver]);
+
+  if (!showStars && !showShootingStars) return null;
 
   return (
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none -z-10 w-full h-full"
-      style={{ display: enabled ? 'block' : 'none' }}
     />
   );
 };
