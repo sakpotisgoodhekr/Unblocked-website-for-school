@@ -14,6 +14,7 @@ import { TiltButton } from './components/TiltButton';
 import { MediaViewerModal } from './components/MediaViewerModal';
 import { FpsCounter } from './components/FpsCounter';
 import { THEME_CONFIGS, DEFAULT_SETTINGS } from './constants';
+import defaultGames from '../games.json';
 
 const RANDOM_TIPS = [
   "Mason H is that you?",
@@ -25,17 +26,20 @@ const RANDOM_TIPS = [
 ];
 
 export default function App() {
-  const [games, setGames] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // Initialize immediately with bundled games so the portal is never empty or stuck
+  const [games, setGames] = useState(defaultGames);
+  const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('home');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGame, setSelectedGame] = useState(null);
   const [activeMediaPlatform, setActiveMediaPlatform] = useState(null);
   const [activeVideoId, setActiveVideoId] = useState(null);
 
-  // Initial Fullsite Loading Screen (Fixes blank page on GitHub Pages)
-  const [appLoading, setAppLoading] = useState(true);
-  const [loadPercent, setLoadPercent] = useState(20);
+  // Initial Fullsite Loading Screen (Instantly skipped if user clicked Skip)
+  const [appLoading, setAppLoading] = useState(() => {
+    return typeof window !== 'undefined' && !window.__PROTIS_SKIPPED;
+  });
+  const [loadPercent, setLoadPercent] = useState(30);
   const [loadStatus, setLoadStatus] = useState('Initializing unblocked portal...');
   const [isFadingOut, setIsFadingOut] = useState(false);
 
@@ -64,44 +68,57 @@ export default function App() {
     }
   });
 
-  // Automated loading sequence
+  // Fast loading sequence & immediate skip listener
   useEffect(() => {
+    const dismissAll = () => {
+      setAppLoading(false);
+      const p = document.getElementById('static-preloader');
+      if (p) {
+        p.style.opacity = '0';
+        p.style.pointerEvents = 'none';
+        setTimeout(() => {
+          if (p && p.parentNode) p.parentNode.removeChild(p);
+        }, 150);
+      }
+    };
+
+    if (window.__PROTIS_SKIPPED) {
+      dismissAll();
+    }
+
+    window.addEventListener('protis-skip-loading', dismissAll);
+
+    // Automated fast load sequence (finishes smoothly within 400ms max)
     const t1 = setTimeout(() => {
-      setLoadPercent(45);
+      setLoadPercent(65);
       setLoadStatus('Optimizing Chromebook 60 FPS Engine...');
-    }, 150);
+    }, 80);
 
     const t2 = setTimeout(() => {
-      setLoadPercent(80);
-      setLoadStatus('Configuring Stealth Themes & Starfield...');
-    }, 350);
-
-    const t3 = setTimeout(() => {
       setLoadPercent(100);
       setLoadStatus('Ready!');
-    }, 600);
+    }, 200);
+
+    const t3 = setTimeout(() => {
+      setIsFadingOut(true);
+    }, 300);
 
     const t4 = setTimeout(() => {
-      setIsFadingOut(true);
-    }, 750);
-
-    const t5 = setTimeout(() => {
-      setAppLoading(false);
-    }, 1050);
+      dismissAll();
+    }, 420);
 
     return () => {
+      window.removeEventListener('protis-skip-loading', dismissAll);
       clearTimeout(t1);
       clearTimeout(t2);
       clearTimeout(t3);
       clearTimeout(t4);
-      clearTimeout(t5);
     };
   }, []);
 
-  // Dynamic fetch of games from iframe JSON database (with GitHub Pages relative path resolution)
+  // Background fetch of games from iframe JSON database (with GitHub Pages relative path resolution)
   useEffect(() => {
     let mounted = true;
-    setLoading(true);
 
     const base = import.meta.env.BASE_URL || './';
     const primaryUrl = `${base.endsWith('/') ? base : base + '/'}games.json`;
@@ -117,14 +134,12 @@ export default function App() {
           .catch(() => fetch('/games.json').then((res) => res.json()));
       })
       .then((data) => {
-        if (mounted && Array.isArray(data)) {
+        if (mounted && Array.isArray(data) && data.length > 0) {
           setGames(data);
-          setLoading(false);
         }
       })
       .catch((err) => {
-        console.warn('Empty or pending games database:', err);
-        if (mounted) setLoading(false);
+        // Fallback already loaded in useState(defaultGames)
       });
 
     return () => {
@@ -255,7 +270,12 @@ export default function App() {
 
               {/* Skip Button next to the loading bar */}
               <TiltButton
-                onClick={() => setAppLoading(false)}
+                onClick={() => {
+                  window.__PROTIS_SKIPPED = true;
+                  setAppLoading(false);
+                  const p = document.getElementById('static-preloader');
+                  if (p && p.parentNode) p.parentNode.removeChild(p);
+                }}
                 className="px-3 py-1 rounded-xl text-xs font-bold text-white bg-slate-800/90 hover:bg-slate-700 border border-white/10 shadow-sm shrink-0 cursor-pointer transition-colors"
                 title="Skip loading screen"
                 scale={1.12}

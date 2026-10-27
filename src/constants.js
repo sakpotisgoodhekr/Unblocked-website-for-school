@@ -2,7 +2,7 @@ export const THEME_CONFIGS = {
   protis: {
     name: 'Default (Protis)',
     title: 'Protis - Unblocked Games',
-    favicon: '/favicon.svg',
+    favicon: './favicon.svg',
     darkBg: '#060913',
     lightBg: '#f8fafc',
     accent: '#06b6d4',
@@ -16,7 +16,7 @@ export const THEME_CONFIGS = {
   classroom: {
     name: 'Google Classroom',
     title: 'Classes - Google Classroom',
-    favicon: '/icons/classroom.svg',
+    favicon: './icons/classroom.svg',
     darkBg: '#071a0e',
     lightBg: '#f6faf7',
     accent: '#137333',
@@ -30,7 +30,7 @@ export const THEME_CONFIGS = {
   drive: {
     name: 'Google Drive',
     title: 'My Drive - Google Drive',
-    favicon: '/icons/drive.svg',
+    favicon: './icons/drive.svg',
     darkBg: '#091322',
     lightBg: '#f4f7fc',
     accent: '#1a73e8',
@@ -44,12 +44,12 @@ export const THEME_CONFIGS = {
   canvas: {
     name: 'Canvas LMS',
     title: 'Dashboard - Canvas LMS',
-    favicon: '/icons/canvas.svg',
+    favicon: './icons/canvas.svg',
     darkBg: '#180b0d',
     lightBg: '#fdf6f6',
     accent: '#e02424',
     cardDark: 'rgba(38, 14, 18, 0.65)',
-    cardLight: 'rgba(254, 242, 242, 0.85)',
+    cardLight: 'rgba(240, 242, 245, 0.85)',
     starTintDark: '#fca5a5',
     starTintLight: '#991b1b',
     borderDark: 'rgba(239, 68, 68, 0.2)',
@@ -58,7 +58,7 @@ export const THEME_CONFIGS = {
   desmos: {
     name: 'Desmos | Graphing Calculator',
     title: 'Desmos | Graphing Calculator',
-    favicon: '/icons/desmos.svg',
+    favicon: './icons/desmos.svg',
     darkBg: '#061320',
     lightBg: '#f2f7fb',
     accent: '#2572b4',
